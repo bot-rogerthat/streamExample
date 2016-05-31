@@ -1,10 +1,9 @@
 package com.epam.streamExample;
 
+import com.epam.streamExample.htmlParser.HtmlParser;
 import com.epam.streamExample.receiver.HtmlReceiver;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class App {
     public static void main(String[] args) throws IOException {
@@ -20,22 +19,7 @@ public class App {
 
         HtmlReceiver htmlReceiver = new HtmlReceiver(host, port);
         String htmlPage = htmlReceiver.getHtmlPage(additionalURL, additionalNumber);
-        System.out.println(parsePage(htmlPage));
-    }
-
-    public static String parsePage(String value) {
-        if (value == null) {
-            throw new IllegalArgumentException("value is null");
-        }
-        if (value.isEmpty()) {
-            throw new IllegalArgumentException("value is empty");
-        }
-        Pattern pattern = Pattern.compile("<div class=\"text\">(.+)</div>");
-        Matcher matcher = pattern.matcher(value);
-        if (matcher.find()) {
-            return matcher.group(1).replace("<br>", "\n").replace("&quot;", "\"");
-        } else {
-            return "not found";
-        }
+        HtmlParser parser = new HtmlParser();
+        System.out.println(parser.parseBashPage(htmlPage));
     }
 }

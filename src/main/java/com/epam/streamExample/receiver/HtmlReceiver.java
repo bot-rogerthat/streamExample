@@ -27,6 +27,22 @@ public class HtmlReceiver {
         }
     }
 
+    private String getHttpStatus(String value) {
+        Pattern pattern = Pattern.compile("^HTTP\\/1.1 (.*)$", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(value);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return "404";
+        }
+    }
+
+    private boolean checkChunked(String value) {
+        Pattern pattern = Pattern.compile("^Transfer-Encoding: (.*)$", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(value);
+        return matcher.find();
+    }
+
     private String getRequest(String additionalUrl, long additionalNumber) {
         return "GET /" + additionalUrl + "/" + additionalNumber + " HTTP/1.1" + "\n"
                 + "Host: " + host + "\n"
@@ -34,19 +50,16 @@ public class HtmlReceiver {
     }
 
     public String getHtmlPage(String additionalUrl, long additionalNumber) {
-        Socket socket = null;
-        OutputStream os = null;
-        InputStream is = null;
         String result = "";
-        try {
-            socket = new Socket(host, port);
-            os = socket.getOutputStream();
+        try (Socket socket = new Socket(host, port);
+             OutputStream os = socket.getOutputStream();
+             InputStream is = socket.getInputStream();
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
             os.write(getRequest(additionalUrl, additionalNumber).getBytes());
             os.flush();
-            is = socket.getInputStream();
             if (is != null) {
                 byte[] buffer = new byte[64 * 1024];
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 while (true) {
                     int readCount = is.read(buffer);
                     if (readCount == -1) {
@@ -57,23 +70,15 @@ public class HtmlReceiver {
                 String charset = getCharset(baos.toString());
                 result = baos.toString(charset);
             }
+            if (!checkChunked(result)) {
+                throw new IllegalArgumentException("Transfer-Encoding not chunked");
+            }
+            if (!"200".equals(getHttpStatus(result))) {
+                throw new IllegalArgumentException("http status: " + getHttpStatus(result));
+            }
             return result;
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-                if (os != null) {
-                    os.close();
-                }
-                if (socket != null) {
-                    socket.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return result;
     }
