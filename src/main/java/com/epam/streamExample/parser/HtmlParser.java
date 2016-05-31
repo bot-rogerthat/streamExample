@@ -1,4 +1,4 @@
-package com.epam.streamExample.htmlParser;
+package com.epam.streamExample.parser;
 
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;

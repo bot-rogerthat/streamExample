@@ -1,6 +1,6 @@
 package com.epam.streamExample;
 
-import com.epam.streamExample.htmlParser.HtmlParser;
+import com.epam.streamExample.parser.HtmlParser;
 import com.epam.streamExample.receiver.HtmlReceiver;
 
 import java.io.IOException;
