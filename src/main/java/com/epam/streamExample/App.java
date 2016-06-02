@@ -9,10 +9,10 @@ public class App {
     public static void main(String[] args) throws IOException {
         String host = "bash.im";
         int port = 80;
-        long additionalNumber = checkArgs(args);
-        String additionalUrl = "quote/" + additionalNumber;
+        long number = checkArgs(args);
+        String getRequest = "GET /quote/"+ number + " HTTP/1.1\nHost: " + host + "\n\n";
 
-        HtmlReceiver htmlReceiver = new HtmlReceiver(host, port, additionalUrl);
+        HtmlReceiver htmlReceiver = new HtmlReceiver(host, port, getRequest);
         String htmlPage = htmlReceiver.getHtmlPage();
         HtmlParser parser = new HtmlParser(htmlPage);
         System.out.println(parser.parseBashPage());

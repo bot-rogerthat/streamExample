@@ -13,23 +13,17 @@ import java.util.regex.Pattern;
 public class HtmlReceiver {
     private String host;
     private int port;
-    private String additionalUrl;
+    private String request;
     private Map<String, String> requestHeaders;
     private StringBuilder messageBody;
 
-    public HtmlReceiver(String host, int port, String additionalUrl) {
+    public HtmlReceiver(String host, int port, String request) {
         this.host = host;
         this.port = port;
-        this.additionalUrl = additionalUrl;
+        this.request = request;
         requestHeaders = new HashMap<>();
         messageBody = new StringBuilder();
         initHtmlHeaders();
-    }
-
-    private String getMethodGET() {
-        return "GET /" + additionalUrl + " HTTP/1.1" + "\n"
-                + "Host: " + host + "\n"
-                + "\n";
     }
 
     private void initHtmlHeaders() {
@@ -37,7 +31,7 @@ public class HtmlReceiver {
              OutputStream os = socket.getOutputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-            os.write(getMethodGET().getBytes());
+            os.write(request.getBytes());
             os.flush();
             setHttpStatus(reader.readLine());
             String header = reader.readLine();
@@ -114,7 +108,7 @@ public class HtmlReceiver {
              OutputStream os = socket.getOutputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset))) {
 
-            os.write(getMethodGET().getBytes());
+            os.write(request.getBytes());
             os.flush();
             while (true) {
                 String str = reader.readLine();
