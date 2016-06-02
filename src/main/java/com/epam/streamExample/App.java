@@ -9,21 +9,13 @@ public class App {
     public static void main(String[] args) throws IOException {
         String host = "bash.im";
         int port = 80;
-        String additionalURL = "quote";
         long additionalNumber = checkArgs(args);
+        String additionalUrl = "quote/" + additionalNumber;
 
-        HtmlReceiver htmlReceiver = new HtmlReceiver(host, port);
-        byte[] htmlPage = htmlReceiver.getHtmlPage(additionalURL, additionalNumber);
+        HtmlReceiver htmlReceiver = new HtmlReceiver(host, port, additionalUrl);
+        String htmlPage = htmlReceiver.getHtmlPage();
         HtmlParser parser = new HtmlParser(htmlPage);
-        if (parser.isChunked()) {
-            if (!"200 OK".equals(parser.findHttpStatus())) {
-                throw new IllegalArgumentException(parser.findHttpStatus());
-            }
-            parser.replaceCharset(parser.findCharset());
-            System.out.println(parser.parseBashPage());
-        } else {
-            throw new IllegalArgumentException("Transfer-Encoding not chunked");
-        }
+        System.out.println(parser.parseBashPage());
     }
 
     private static long checkArgs(String[] args) {
