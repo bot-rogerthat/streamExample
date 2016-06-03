@@ -3,17 +3,13 @@ package com.epam.streamExample;
 import com.epam.streamExample.parser.HtmlParser;
 import com.epam.streamExample.receiver.HtmlReceiver;
 
-import java.io.IOException;
-
 public class App {
-    public static void main(String[] args) throws IOException {
-        String host = "bash.im";
-        int port = 80;
+    public static void main(String[] args) {
         long number = checkArgs(args);
-        String getRequest = "GET /quote/"+ number + " HTTP/1.1\nHost: " + host + "\n\n";
+        String url = "bash.im/quote/" + number;
 
-        HtmlReceiver htmlReceiver = new HtmlReceiver(host, port, getRequest);
-        String htmlPage = htmlReceiver.getHtmlPage();
+        HtmlReceiver htmlReceiver = new HtmlReceiver();
+        String htmlPage = htmlReceiver.getHtmlPage(url);
         HtmlParser parser = new HtmlParser(htmlPage);
         System.out.println(parser.parseBashPage());
     }
