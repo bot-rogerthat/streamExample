@@ -10,8 +10,8 @@ public class App {
 
         HtmlReceiver htmlReceiver = new HtmlReceiver();
         String htmlPage = htmlReceiver.getHtmlPage(url);
-        HtmlParser parser = new HtmlParser(htmlPage);
-        System.out.println(parser.parseBashPage());
+        HtmlParser parser = new HtmlParser();
+        System.out.println(parser.parseBashPage(htmlPage));
     }
 
     private static long checkArgs(String[] args) {

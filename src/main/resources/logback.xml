@@ -11,11 +11,11 @@
     </appender>
 
     <logger name="com.epam.streamExample" level="warn" additivity="false">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </logger>
 
     <root level="error">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </root>
 
 </configuration>

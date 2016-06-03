@@ -4,13 +4,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HtmlParser {
-    private String htmlPage;
 
-    public HtmlParser(String htmlPage) {
-        this.htmlPage = htmlPage;
+    public HtmlParser() {
     }
 
-    public String parseBashPage() {
+    public String parseBashPage(String htmlPage) {
         if (htmlPage == null) {
             throw new IllegalArgumentException("value is null");
         }
