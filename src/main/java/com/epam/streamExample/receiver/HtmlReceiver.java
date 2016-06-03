@@ -104,19 +104,7 @@ public class HtmlReceiver {
     private void readNotChunk(BufferedReader reader) throws IOException {
         if (requestHeaders.containsKey("Content-Lenght")) {
             while (true) {
-                String str = reader.readLine();
-                if (str == null) {
-                    throw new IOException();
-                }
-                if (str.length() == 0) {
-                    continue;
-                }
-                int toread;
-                try {
-                    toread = Integer.parseInt(requestHeaders.get("Content-Lenght"));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Number format error: " + str);
-                }
+                int toread = Integer.parseInt(requestHeaders.get("Content-Lenght"));
                 if (toread == 0) {
                     break;
                 }
