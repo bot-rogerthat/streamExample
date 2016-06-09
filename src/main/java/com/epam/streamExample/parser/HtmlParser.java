@@ -5,9 +5,6 @@ import java.util.regex.Pattern;
 
 public class HtmlParser {
 
-    public HtmlParser() {
-    }
-
     public String parseBashPage(String htmlPage) {
         if (htmlPage == null) {
             throw new IllegalArgumentException("value is null");
@@ -20,7 +17,7 @@ public class HtmlParser {
         if (matcher.find()) {
             return matcher.group(1).replace("<br>", "\n").replace("&quot;", "\"");
         } else {
-            return "not found";
+            throw new IllegalArgumentException("Quote not found");
         }
     }
 }
